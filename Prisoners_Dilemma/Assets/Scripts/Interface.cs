@@ -7,6 +7,9 @@ using System.Collections.Generic;
 public class Interface : MonoBehaviour {
 	public Game gameScript;
 	public Canvas canvas;
+	public Text round;
+	public Text scoreP1;
+	public Text scoreP2;
 
 	public void Coop(int p) {
 		gameScript.SetAction (p, (UInt16)1);

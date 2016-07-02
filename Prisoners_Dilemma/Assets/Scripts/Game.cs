@@ -11,15 +11,6 @@ struct Board {
 	public UInt16 action;
 }
 
-struct ScreenSpace {
-	public const float width = 8.892f * 2.0f;
-	public const float height = 5.0f * 2.0f;
-	public const float left = -8.892f;
-	public const float right = 8.892f;
-	public const float top = 5.0f;
-	public const float bottom = -5.0f;
-}
-
 
 public class Game : MonoBehaviour {
 	public Interface interfaceScript;
@@ -58,10 +49,10 @@ public class Game : MonoBehaviour {
 			RectTransform curBoard1 = board [i] [0].fieldElement.GetComponent<RectTransform> ();
 			RectTransform curBoard2 = board [i] [1].fieldElement.GetComponent<RectTransform> ();
 
-			curBoard1.sizeDelta = new Vector2 (fieldSize, fieldSize);
-			curBoard2.sizeDelta = new Vector2 (fieldSize, fieldSize);
-			curBoard1.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), fieldPixel / 2.0f);
-			curBoard2.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), -(fieldPixel / 2.0f));
+			curBoard1.sizeDelta = new Vector2 (fieldSize, Mathf.Clamp(fieldSize, 50.0f, 125.0f));
+			curBoard2.sizeDelta = new Vector2 (fieldSize, Mathf.Clamp(fieldSize, 50.0f, 125.0f));
+			curBoard1.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), curBoard1.rect.height / 2.0f + 5.0f);
+			curBoard2.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), -(curBoard2.rect.height / 2.0f + 5.0f));
 		}
 	}
 
@@ -88,9 +79,12 @@ public class Game : MonoBehaviour {
 			}
 
 			++round;
-			GameObject.Find ("Round").GetComponent<Text> ().text = "" + (round + 1);
-			GameObject.Find ("ScoreP1").GetComponent<Text> ().text = "" + scoreP1;
-			GameObject.Find ("ScoreP2").GetComponent<Text> ().text = "" + scoreP2;
+
+			if (round == boardSize) --round; // To-Do: End game
+
+			interfaceScript.round.text = "" + (round + 1);
+			interfaceScript.scoreP1.text = "" + scoreP1;
+			interfaceScript.scoreP2.text = "" + scoreP2;
 		}
 	}
 
