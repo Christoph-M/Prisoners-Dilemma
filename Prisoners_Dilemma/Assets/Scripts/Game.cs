@@ -57,7 +57,7 @@ public class Game : MonoBehaviour {
 
 			++round;
 
-			if (round == boardSize) {
+			if (round == rounds) {
 				--round;
 
 				interfaceScript.restart.gameObject.SetActive (true);
@@ -71,10 +71,12 @@ public class Game : MonoBehaviour {
 	}
 
 	public void ResetGame() {
-		for (int i = 0; i < rounds; ++i) {
-			for (int f = 0; f < 2; ++f) {
-				Destroy (board [i] [f].fieldAction);
-				Destroy (board [i] [f].fieldElement);
+		if (board != null) {
+			for (int i = 0; i < rounds; ++i) {
+				for (int f = 0; f < 2; ++f) {
+					Destroy (board [i] [f].fieldAction);
+					Destroy (board [i] [f].fieldElement);
+				}
 			}
 		}
 
@@ -89,8 +91,9 @@ public class Game : MonoBehaviour {
 
 		board = new List<Board[]>();
 
-		float fieldPixel = interfaceScript.canvas.pixelRect.width / boardSize;
-		float fieldSize = fieldPixel - 10.0f;
+		float fieldSize = interfaceScript.canvas.pixelRect.width / boardSize;
+		float fieldBorder = Mathf.Clamp(fieldSize / 10.0f, 0.0f, 20.0f);
+		float fieldSizeWithoutBorder = fieldSize - fieldBorder;
 		float halfWidth = interfaceScript.canvas.pixelRect.width / 2.0f;
 
 		for (int i = 0; i < rounds; ++i) {
@@ -107,10 +110,10 @@ public class Game : MonoBehaviour {
 			RectTransform curBoard1 = board [i] [0].fieldElement.GetComponent<RectTransform> ();
 			RectTransform curBoard2 = board [i] [1].fieldElement.GetComponent<RectTransform> ();
 
-			curBoard1.sizeDelta = new Vector2 (fieldSize, Mathf.Clamp(fieldSize, 50.0f, 125.0f));
-			curBoard2.sizeDelta = new Vector2 (fieldSize, Mathf.Clamp(fieldSize, 50.0f, 125.0f));
-			curBoard1.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), curBoard1.rect.height / 2.0f + 5.0f);
-			curBoard2.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), -(curBoard2.rect.height / 2.0f + 5.0f));
+			curBoard1.sizeDelta = new Vector2 (fieldSizeWithoutBorder, Mathf.Clamp(fieldSizeWithoutBorder, 50.0f, 125.0f));
+			curBoard2.sizeDelta = new Vector2 (fieldSizeWithoutBorder, Mathf.Clamp(fieldSizeWithoutBorder, 50.0f, 125.0f));
+			curBoard1.anchoredPosition = new Vector2 (fieldSize * i - (halfWidth - fieldSize / 2.0f), curBoard1.rect.height / 2.0f + fieldBorder / 2.0f);
+			curBoard2.anchoredPosition = new Vector2 (fieldSize * i - (halfWidth - fieldSize / 2.0f), -(curBoard2.rect.height / 2.0f + fieldBorder / 2.0f));
 		}
 
 		interfaceScript.restart.gameObject.SetActive (false);
