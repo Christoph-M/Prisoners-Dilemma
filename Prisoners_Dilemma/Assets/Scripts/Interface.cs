@@ -22,6 +22,10 @@ public class Interface : MonoBehaviour {
 	void Start() {
 		boardSizeSlider.value = gameScript.boardSize;
 		boardSize.text = "" + gameScript.boardSize;
+
+		Color newColor = Color.Lerp (Color.green, Color.red, gameScript.boardSize / boardSizeSlider.maxValue);
+		boardSizeSlider.transform.FindChild("Background").GetComponent<Image>().color = newColor;
+		boardSizeSlider.transform.FindChild("Fill Area").FindChild("Fill").GetComponent<Image>().color = newColor;
 	}
 
 	public void Coop(int p) {
@@ -40,6 +44,10 @@ public class Interface : MonoBehaviour {
 	public void ChangeBoardSize() {
 		gameScript.boardSize = (uint)boardSizeSlider.value;
 		boardSize.text = "" + gameScript.boardSize;
+
+		Color newColor = Color.Lerp (Color.green, Color.red, boardSizeSlider.value / boardSizeSlider.maxValue);
+		boardSizeSlider.transform.FindChild("Background").GetComponent<Image>().color = newColor;
+		boardSizeSlider.transform.FindChild("Fill Area").FindChild("Fill").GetComponent<Image>().color = newColor;
 	}
 
 	public void SetButtonsEnabled(bool b) {
