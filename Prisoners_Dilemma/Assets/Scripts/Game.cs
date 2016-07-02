@@ -36,7 +36,7 @@ public class Game : MonoBehaviour {
 	public void SetAction(int p, UInt16 action) {
 		board [round] [p - 1].action = action;
 
-		this.UpdateBoard ();
+		this.UpdateBoard (p - 1);
 
 		if (board [round] [0].action != 0 && board [round] [1].action != 0) {
 			int actions = board [round] [0].action + board [round] [1].action;
@@ -117,35 +117,16 @@ public class Game : MonoBehaviour {
 		interfaceScript.restart.gameObject.SetActive (false);
 	}
 
-	private void UpdateBoard () {
-		for (int i = 0; i < 2; ++i) {
-			switch (board [round] [i].action) {
-				case 2: {
-					Destroy (board [round] [i].fieldAction);
-					board [round] [i].fieldAction = Instantiate (coopAction) as GameObject;
-					board [round] [i].fieldAction.transform.SetParent (board [round] [i].fieldElement.transform, false);
-					board [round] [i].fieldAction.name = "Coop_" + round + "_" + i;
-						
-					RectTransform curAction = board [round] [i].fieldAction.GetComponent<RectTransform> ();
-					RectTransform curField = board [round] [i].fieldElement.GetComponent<RectTransform> ();
-						
-					curAction.sizeDelta = curField.sizeDelta;
-					curAction.anchoredPosition = new Vector2(0.0f, 0.0f);
-					break;}
-				case 4: {
-					Destroy (board [round] [i].fieldAction);
-					board [round] [i].fieldAction = Instantiate (cheatAction) as GameObject;
-					board [round] [i].fieldAction.transform.SetParent (board [round] [i].fieldElement.transform, false);
-					board [round] [i].fieldAction.name = "Cheat_" + round + "_" + i;
-
-					RectTransform curAction = board [round] [i].fieldAction.GetComponent<RectTransform> ();
-					RectTransform curField = board [round] [i].fieldElement.GetComponent<RectTransform> ();
-
-					curAction.sizeDelta = curField.sizeDelta;
-					curAction.anchoredPosition = new Vector2(0.0f, 0.0f);
-					break;}
-				default: break;
-			}
-		}
+	private void UpdateBoard (int p) {
+		Destroy (board [round] [p].fieldAction);
+		board [round] [p].fieldAction = Instantiate ((board [round] [p].action == 2) ? coopAction : cheatAction) as GameObject;
+		board [round] [p].fieldAction.transform.SetParent (board [round] [p].fieldElement.transform, false);
+		board [round] [p].fieldAction.name = "Coop_" + round + "_" + p;
+			
+		RectTransform curAction = board [round] [p].fieldAction.GetComponent<RectTransform> ();
+		RectTransform curField = board [round] [p].fieldElement.GetComponent<RectTransform> ();
+			
+		curAction.sizeDelta = curField.sizeDelta;
+		curAction.anchoredPosition = new Vector2(0.0f, 0.0f);
 	}
 }
