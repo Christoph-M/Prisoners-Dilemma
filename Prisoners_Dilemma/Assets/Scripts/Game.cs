@@ -42,17 +42,23 @@ public class Game : MonoBehaviour {
 
 		for (int i = 0; i < boardSize; ++i) {
 			board.Add (new Board[2]);
-			board [i] [0].action = 0;
-			board [i] [1].action = 0;
 
-			board [i] [0].fieldElement = Instantiate(fieldElement, new Vector3(1.5f * i - ScreenSpace.width / 2.0f + 2.0f, 1.0f, 0.0f), Quaternion.identity) as GameObject;
-			board [i] [1].fieldElement = Instantiate(fieldElement, new Vector3(1.5f * i - ScreenSpace.width / 2.0f + 2.0f, -1.0f, 0.0f), Quaternion.identity) as GameObject;
+			for (int f = 0; f < 2; ++f) {
+				board [i] [f].action = 0;
 
-			board [i] [0].fieldElement.transform.parent = GameObject.Find ("Board").transform;
-			board [i] [1].fieldElement.transform.parent = GameObject.Find ("Board").transform;
+				board [i] [f].fieldElement = Instantiate(fieldElement) as GameObject;
+				board [i] [f].fieldElement.transform.SetParent(GameObject.Find ("Board").transform, false);
+				board [i] [f].fieldElement.name = "FieldElement_" + i + "_" + f;
+			}
 
-			board [i] [0].fieldElement.name = "FieldElement_" + i + "_0";
-			board [i] [1].fieldElement.name = "FieldElement_" + i + "_1";
+			float fieldPixel = interfaceScript.canvas.pixelRect.width / boardSize;
+			float fieldSize = fieldPixel - 10.0f;
+			float halfWidth = interfaceScript.canvas.pixelRect.width / 2.0f;
+
+			board [i] [0].fieldElement.GetComponent<RectTransform> ().sizeDelta = new Vector2 (fieldSize, fieldSize);
+			board [i] [1].fieldElement.GetComponent<RectTransform> ().sizeDelta = new Vector2 (fieldSize, fieldSize);
+			board [i] [0].fieldElement.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), fieldPixel / 2.0f);
+			board [i] [1].fieldElement.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), -(fieldPixel / 2.0f));
 		}
 	}
 
@@ -91,13 +97,13 @@ public class Game : MonoBehaviour {
 				case 1: 
 					Destroy (board [round] [i].fieldAction);
 					board [round] [i].fieldAction = Instantiate (coopAction, board [round] [i].fieldElement.transform.position, Quaternion.identity) as GameObject;
-					board [round] [i].fieldAction.transform.parent = board [round] [i].fieldElement.transform;
+					board [round] [i].fieldAction.transform.SetParent(board [round] [i].fieldElement.transform, false);
 					board [round] [i].fieldAction.name = "Coop_" + round + "_" + i;
 					break;
 				case 2: 
 					Destroy (board [round] [i].fieldAction);
 					board [round] [i].fieldAction = Instantiate (cheatAction, board [round] [i].fieldElement.transform.position, Quaternion.identity) as GameObject;
-					board [round] [i].fieldAction.transform.parent = board [round] [i].fieldElement.transform;
+					board [round] [i].fieldAction.transform.SetParent(board [round] [i].fieldElement.transform, false);
 					board [round] [i].fieldAction.name = "Cheat_" + round + "_" + i;
 					break;
 				default: break;
