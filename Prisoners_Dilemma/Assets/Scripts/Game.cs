@@ -24,36 +24,13 @@ public class Game : MonoBehaviour {
 
 	private List<Board[]> board;
 
+	private uint rounds;
 	private int round = 0;
 	private int scoreP1 = 0;
 	private int scoreP2 = 0;
 
 	void Start () {
-		board = new List<Board[]>();
-
-		float fieldPixel = interfaceScript.canvas.pixelRect.width / boardSize;
-		float fieldSize = fieldPixel - 10.0f;
-		float halfWidth = interfaceScript.canvas.pixelRect.width / 2.0f;
-
-		for (int i = 0; i < boardSize; ++i) {
-			board.Add (new Board[2]);
-
-			for (int f = 0; f < 2; ++f) {
-				board [i] [f].action = 0;
-
-				board [i] [f].fieldElement = Instantiate(fieldElement) as GameObject;
-				board [i] [f].fieldElement.transform.SetParent(GameObject.Find ("Board").transform, false);
-				board [i] [f].fieldElement.name = "FieldElement_" + i + "_" + f;
-			}
-
-			RectTransform curBoard1 = board [i] [0].fieldElement.GetComponent<RectTransform> ();
-			RectTransform curBoard2 = board [i] [1].fieldElement.GetComponent<RectTransform> ();
-
-			curBoard1.sizeDelta = new Vector2 (fieldSize, Mathf.Clamp(fieldSize, 50.0f, 125.0f));
-			curBoard2.sizeDelta = new Vector2 (fieldSize, Mathf.Clamp(fieldSize, 50.0f, 125.0f));
-			curBoard1.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), curBoard1.rect.height / 2.0f + 5.0f);
-			curBoard2.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), -(curBoard2.rect.height / 2.0f + 5.0f));
-		}
+		this.ResetGame ();
 	}
 
 	public void SetAction(int p, UInt16 action) {
@@ -80,12 +57,63 @@ public class Game : MonoBehaviour {
 
 			++round;
 
-			if (round == boardSize) --round; // To-Do: End game
+			if (round == boardSize) {
+				--round;
+
+				interfaceScript.restart.gameObject.SetActive (true);
+				interfaceScript.SetButtonsEnabled (false);
+			}
 
 			interfaceScript.round.text = "" + (round + 1);
 			interfaceScript.scoreP1.text = "" + scoreP1;
 			interfaceScript.scoreP2.text = "" + scoreP2;
 		}
+	}
+
+	public void ResetGame() {
+		for (int i = 0; i < rounds; ++i) {
+			for (int f = 0; f < 2; ++f) {
+				Destroy (board [i] [f].fieldAction);
+				Destroy (board [i] [f].fieldElement);
+			}
+		}
+
+		rounds = boardSize;
+		round = 0;
+		scoreP1 = 0;
+		scoreP2 = 0;
+
+		interfaceScript.round.text = "1";
+		interfaceScript.scoreP1.text = "0";
+		interfaceScript.scoreP2.text = "0";
+
+		board = new List<Board[]>();
+
+		float fieldPixel = interfaceScript.canvas.pixelRect.width / boardSize;
+		float fieldSize = fieldPixel - 10.0f;
+		float halfWidth = interfaceScript.canvas.pixelRect.width / 2.0f;
+
+		for (int i = 0; i < rounds; ++i) {
+			board.Add (new Board[2]);
+
+			for (int f = 0; f < 2; ++f) {
+				board [i] [f].action = 0;
+
+				board [i] [f].fieldElement = Instantiate(fieldElement) as GameObject;
+				board [i] [f].fieldElement.transform.SetParent(GameObject.Find ("Board").transform, false);
+				board [i] [f].fieldElement.name = "FieldElement_" + i + "_" + f;
+			}
+
+			RectTransform curBoard1 = board [i] [0].fieldElement.GetComponent<RectTransform> ();
+			RectTransform curBoard2 = board [i] [1].fieldElement.GetComponent<RectTransform> ();
+
+			curBoard1.sizeDelta = new Vector2 (fieldSize, Mathf.Clamp(fieldSize, 50.0f, 125.0f));
+			curBoard2.sizeDelta = new Vector2 (fieldSize, Mathf.Clamp(fieldSize, 50.0f, 125.0f));
+			curBoard1.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), curBoard1.rect.height / 2.0f + 5.0f);
+			curBoard2.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), -(curBoard2.rect.height / 2.0f + 5.0f));
+		}
+
+		interfaceScript.restart.gameObject.SetActive (false);
 	}
 
 	private void UpdateBoard () {
