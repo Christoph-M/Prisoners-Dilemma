@@ -39,20 +39,18 @@ public class Game : MonoBehaviour {
 		this.UpdateBoard ();
 
 		if (board [round] [0].action != 0 && board [round] [1].action != 0) {
-			if (board [round] [0].action == 1) {
-				if (board [round] [1].action == 1) {
-					scoreP1 += 3;
-					scoreP2 += 3;
-				} else {
-					scoreP2 += 5;
-				}
-			} else {
-				if (board [round] [1].action == 2) {
-					++scoreP1;
-					++scoreP2;
-				} else {
-					scoreP1 += 5;
-				}
+			int actions = board [round] [0].action + board [round] [1].action;
+
+			switch (actions) {
+				case 4: scoreP1 += 3; scoreP2 += 3; break;
+				case 6:
+					if (board [round] [0].action > board [round] [1].action)
+						scoreP1 += 5;
+					else
+						scoreP2 += 5;
+					break;
+				case 8: ++scoreP1; ++scoreP2; break;
+				default: break;
 			}
 
 			++round;
@@ -122,7 +120,7 @@ public class Game : MonoBehaviour {
 	private void UpdateBoard () {
 		for (int i = 0; i < 2; ++i) {
 			switch (board [round] [i].action) {
-				case 1: {
+				case 2: {
 					Destroy (board [round] [i].fieldAction);
 					board [round] [i].fieldAction = Instantiate (coopAction) as GameObject;
 					board [round] [i].fieldAction.transform.SetParent (board [round] [i].fieldElement.transform, false);
@@ -134,7 +132,7 @@ public class Game : MonoBehaviour {
 					curAction.sizeDelta = curField.sizeDelta;
 					curAction.anchoredPosition = new Vector2(0.0f, 0.0f);
 					break;}
-				case 2: {
+				case 4: {
 					Destroy (board [round] [i].fieldAction);
 					board [round] [i].fieldAction = Instantiate (cheatAction) as GameObject;
 					board [round] [i].fieldAction.transform.SetParent (board [round] [i].fieldElement.transform, false);

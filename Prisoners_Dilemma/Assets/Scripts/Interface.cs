@@ -17,11 +17,11 @@ public class Interface : MonoBehaviour {
 	public Text scoreP2;
 
 	public void Coop(int p) {
-		gameScript.SetAction (p, (UInt16)1);
+		gameScript.SetAction (p, (UInt16)2);
 	}
 
 	public void Cheat(int p) {
-		gameScript.SetAction (p, (UInt16)2);
+		gameScript.SetAction (p, (UInt16)4);
 	}
 
 	public void Restart() {
