@@ -40,6 +40,10 @@ public class Game : MonoBehaviour {
 	void Start () {
 		board = new List<Board[]>();
 
+		float fieldPixel = interfaceScript.canvas.pixelRect.width / boardSize;
+		float fieldSize = fieldPixel - 10.0f;
+		float halfWidth = interfaceScript.canvas.pixelRect.width / 2.0f;
+
 		for (int i = 0; i < boardSize; ++i) {
 			board.Add (new Board[2]);
 
@@ -51,14 +55,13 @@ public class Game : MonoBehaviour {
 				board [i] [f].fieldElement.name = "FieldElement_" + i + "_" + f;
 			}
 
-			float fieldPixel = interfaceScript.canvas.pixelRect.width / boardSize;
-			float fieldSize = fieldPixel - 10.0f;
-			float halfWidth = interfaceScript.canvas.pixelRect.width / 2.0f;
+			RectTransform curBoard1 = board [i] [0].fieldElement.GetComponent<RectTransform> ();
+			RectTransform curBoard2 = board [i] [1].fieldElement.GetComponent<RectTransform> ();
 
-			board [i] [0].fieldElement.GetComponent<RectTransform> ().sizeDelta = new Vector2 (fieldSize, fieldSize);
-			board [i] [1].fieldElement.GetComponent<RectTransform> ().sizeDelta = new Vector2 (fieldSize, fieldSize);
-			board [i] [0].fieldElement.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), fieldPixel / 2.0f);
-			board [i] [1].fieldElement.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), -(fieldPixel / 2.0f));
+			curBoard1.sizeDelta = new Vector2 (fieldSize, fieldSize);
+			curBoard2.sizeDelta = new Vector2 (fieldSize, fieldSize);
+			curBoard1.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), fieldPixel / 2.0f);
+			curBoard2.anchoredPosition = new Vector2 (fieldPixel * i - (halfWidth - fieldPixel / 2.0f), -(fieldPixel / 2.0f));
 		}
 	}
 
@@ -94,18 +97,30 @@ public class Game : MonoBehaviour {
 	private void UpdateBoard () {
 		for (int i = 0; i < 2; ++i) {
 			switch (board [round] [i].action) {
-				case 1: 
+				case 1: {
 					Destroy (board [round] [i].fieldAction);
-					board [round] [i].fieldAction = Instantiate (coopAction, board [round] [i].fieldElement.transform.position, Quaternion.identity) as GameObject;
-					board [round] [i].fieldAction.transform.SetParent(board [round] [i].fieldElement.transform, false);
+					board [round] [i].fieldAction = Instantiate (coopAction) as GameObject;
+					board [round] [i].fieldAction.transform.SetParent (board [round] [i].fieldElement.transform, false);
 					board [round] [i].fieldAction.name = "Coop_" + round + "_" + i;
-					break;
-				case 2: 
+						
+					RectTransform curAction = board [round] [i].fieldAction.GetComponent<RectTransform> ();
+					RectTransform curField = board [round] [i].fieldElement.GetComponent<RectTransform> ();
+						
+					curAction.sizeDelta = curField.sizeDelta;
+					curAction.anchoredPosition = new Vector2(0.0f, 0.0f);
+					break;}
+				case 2: {
 					Destroy (board [round] [i].fieldAction);
-					board [round] [i].fieldAction = Instantiate (cheatAction, board [round] [i].fieldElement.transform.position, Quaternion.identity) as GameObject;
-					board [round] [i].fieldAction.transform.SetParent(board [round] [i].fieldElement.transform, false);
+					board [round] [i].fieldAction = Instantiate (cheatAction) as GameObject;
+					board [round] [i].fieldAction.transform.SetParent (board [round] [i].fieldElement.transform, false);
 					board [round] [i].fieldAction.name = "Cheat_" + round + "_" + i;
-					break;
+
+					RectTransform curAction = board [round] [i].fieldAction.GetComponent<RectTransform> ();
+					RectTransform curField = board [round] [i].fieldElement.GetComponent<RectTransform> ();
+
+					curAction.sizeDelta = curField.sizeDelta;
+					curAction.anchoredPosition = new Vector2(0.0f, 0.0f);
+					break;}
 				default: break;
 			}
 		}
