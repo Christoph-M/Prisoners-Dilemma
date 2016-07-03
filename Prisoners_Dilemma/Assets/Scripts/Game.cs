@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-struct Board {
+public struct Board {
 	public GameObject fieldElement;
 	public GameObject fieldAction;
 	public UInt16 action;
@@ -32,6 +32,7 @@ class ScreenSize {
 
 public class Game : MonoBehaviour {
 	public Interface interfaceScript;
+	public AI aiScript;
 
 	public GameObject fieldElement;
 	public GameObject coopAction;
@@ -145,6 +146,14 @@ public class Game : MonoBehaviour {
 
 	public bool GameRunning() {
 		return gameRunning;
+	}
+
+	public int GetRound() {
+		return round;
+	}
+
+	public List<Board[]> GetBoard() {
+		return board;
 	}
 
 	private void UpdateBoard (int p) {

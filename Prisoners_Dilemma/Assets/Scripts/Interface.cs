@@ -13,7 +13,11 @@ public class Interface : MonoBehaviour {
 	public Button chratP1;
 	public Button chratP2;
 	public Toggle aiPlay;
+	public Toggle aiP1;
+	public Toggle aiP2;
 	public Slider boardSizeSlider;
+	public Dropdown aiP1Strategy;
+	public Dropdown aiP2Strategy;
 	public Text round;
 	public Text scoreP1;
 	public Text scoreP2;
@@ -23,6 +27,15 @@ public class Interface : MonoBehaviour {
 	void Start() {
 		boardSizeSlider.value = gameScript.boardSize;
 		boardSize.text = "" + gameScript.boardSize;
+
+		List<String> options = new List<string> ();
+
+		for (int i = 0; i < gameScript.aiScript.strategies.Count; ++i) {
+			options.Add (gameScript.aiScript.strategies [i].GetType().ToString().Substring(8));
+		}
+
+		aiP1Strategy.AddOptions (options);
+		aiP2Strategy.AddOptions (options);
 
 		Color newColor = Color.Lerp (Color.green, Color.red, gameScript.boardSize / boardSizeSlider.maxValue);
 		boardSizeSlider.transform.FindChild("Background").GetComponent<Image>().color = newColor;
@@ -43,7 +56,15 @@ public class Interface : MonoBehaviour {
 	}
 
 	public void LetAiPlay() {
-		FindObjectOfType<AI> ().enabled = aiPlay.isOn;
+		gameScript.aiScript.enabled = aiPlay.isOn;
+	}
+
+	public void EnableAi(int p) {
+		gameScript.aiScript.SetAiEnabled (p, (p == 1) ? aiP1.isOn : aiP2.isOn);
+	}
+
+	public void SetAiStrategy(int p) {
+		gameScript.aiScript.SetAiStrategy(p, (p == 1) ? aiP1Strategy.value : aiP2Strategy.value);
 	}
 
 	public void ChangeBoardSize() {
