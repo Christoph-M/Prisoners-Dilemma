@@ -29,6 +29,8 @@ public class Game : MonoBehaviour {
 	private int scoreP1 = 0;
 	private int scoreP2 = 0;
 
+	private bool gameRunning = true;
+
 	void Start () {
 		this.ResetGame ();
 	}
@@ -58,6 +60,7 @@ public class Game : MonoBehaviour {
 			if (round == rounds) {
 				--round;
 
+				gameRunning = false;
 				interfaceScript.restart.gameObject.SetActive (true);
 				interfaceScript.SetButtonsEnabled (false);
 			}
@@ -114,7 +117,12 @@ public class Game : MonoBehaviour {
 			curBoard2.anchoredPosition = new Vector2 (fieldSize * i - (halfWidth - fieldSize / 2.0f), -(curBoard2.rect.height / 2.0f + fieldBorder / 2.0f));
 		}
 
+		gameRunning = true;
 		interfaceScript.restart.gameObject.SetActive (false);
+	}
+
+	public bool GameRunning() {
+		return gameRunning;
 	}
 
 	private void UpdateBoard (int p) {

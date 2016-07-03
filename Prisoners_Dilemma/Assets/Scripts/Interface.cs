@@ -12,6 +12,7 @@ public class Interface : MonoBehaviour {
 	public Button coopP2;
 	public Button chratP1;
 	public Button chratP2;
+	public Toggle aiPlay;
 	public Slider boardSizeSlider;
 	public Text round;
 	public Text scoreP1;
@@ -39,6 +40,10 @@ public class Interface : MonoBehaviour {
 	public void Restart() {
 		gameScript.ResetGame ();
 		this.SetButtonsEnabled (true);
+	}
+
+	public void LetAiPlay() {
+		FindObjectOfType<AI> ().enabled = aiPlay.isOn;
 	}
 
 	public void ChangeBoardSize() {
