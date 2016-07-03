@@ -2,5 +2,11 @@
 using System.Collections;
 
 public class Strategy : MonoBehaviour {
-	public virtual int GetAction()  { return -1; }
+	protected AI aiScript;
+
+	void Start() {
+		aiScript = FindObjectOfType<AI> ();
+	}
+
+	public virtual int GetAction(int p)  { return -1; }
 }

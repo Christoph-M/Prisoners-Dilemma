@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StrategyRandom : Strategy {
+public class StrategyAlwaysCoop : Strategy {
 
 	public override int GetAction(int p) {
-		return Random.Range (1, 3);
+		return 1;
 	}
 }

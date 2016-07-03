@@ -32,7 +32,7 @@ public class AI : MonoBehaviour {
 
 		if (gameScript.GameRunning ()) {
 			if (p1AiEnabled && !p1AiPlayed) {
-				switch (strategies[p1AiStrategy].GetAction()) {
+				switch (strategies[p1AiStrategy].GetAction(1)) {
 					case 1: interfaceScript.Coop (1); break;
 					case 2: interfaceScript.Cheat (1); break;
 					default: Debug.Log ("No Action/Strategy selected"); break;
@@ -42,7 +42,7 @@ public class AI : MonoBehaviour {
 			}
 
 			if (p2AiEnabled && !p2AiPlayed) {
-				switch (strategies[p2AiStrategy].GetAction()) {
+				switch (strategies[p2AiStrategy].GetAction(2)) {
 					case 1: interfaceScript.Coop (2); break;
 					case 2: interfaceScript.Cheat (2); break;
 					default: Debug.Log ("No Action/Strategy selected"); break;
@@ -68,7 +68,7 @@ public class AI : MonoBehaviour {
 	public void SetAiStrategy(int p, int strategy) {
 		switch (p) {
 			case 1: p1AiStrategy = strategy; break;
-			case 2: p1AiStrategy = strategy; break;
+			case 2: p2AiStrategy = strategy; break;
 		}
 	}
 }
