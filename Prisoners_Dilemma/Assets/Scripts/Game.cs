@@ -11,6 +11,24 @@ struct Board {
 	public UInt16 action;
 }
 
+class ScreenSize {
+	public readonly float width;
+	public readonly float height;
+	public readonly float left;
+	public readonly float right;
+	public readonly float top;
+	public readonly float bottom;
+
+	public ScreenSize(Rect screenRect) {
+		width  = screenRect.width;
+		height = screenRect.height;
+		left   = screenRect.xMin;
+		right  = screenRect.xMax;
+		top    = screenRect.yMin;
+		bottom = screenRect.yMax;
+	}
+}
+
 
 public class Game : MonoBehaviour {
 	public Interface interfaceScript;
@@ -23,6 +41,8 @@ public class Game : MonoBehaviour {
 
 
 	private List<Board[]> board;
+
+	private ScreenSize screen;
 
 	private uint rounds;
 	private int round = 0;
@@ -81,6 +101,8 @@ public class Game : MonoBehaviour {
 			}
 		}
 
+		screen = new ScreenSize (interfaceScript.canvas.pixelRect);
+
 		rounds = boardSize;
 		round = 0;
 		scoreP1 = 0;
@@ -92,10 +114,10 @@ public class Game : MonoBehaviour {
 
 		board = new List<Board[]>();
 
-		float fieldSize = interfaceScript.canvas.pixelRect.width / boardSize;
-		float fieldBorder = Mathf.Clamp(fieldSize / 10.0f, 0.0f, 20.0f);
+		float fieldSize = screen.width / boardSize;
+		float fieldBorder = Mathf.Clamp(fieldSize / 10.0f, 0.0f, screen.height / 25.0f);
 		float fieldSizeWithoutBorder = fieldSize - fieldBorder;
-		float halfWidth = interfaceScript.canvas.pixelRect.width / 2.0f;
+		float halfWidth = screen.width / 2.0f;
 
 		for (int i = 0; i < rounds; ++i) {
 			board.Add (new Board[2]);
